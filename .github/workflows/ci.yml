@@ -1,0 +1,12 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    uses: scalar-app/.github/.github/workflows/reusable-node-ci.yml@main
+    with:
+      node-version: '24'
