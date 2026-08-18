@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/scalar-app/.github/main/assets/scalar.png" alt="Scalar" width="96" />
+  <img src="https://raw.githubusercontent.com/scalar-app/.github/main/profile/assets/scalar.png" alt="Scalar" width="96" />
   <h1>@scalar/ai</h1>
   <p>The intelligence layer behind Scalar Command.</p>
 </div>
