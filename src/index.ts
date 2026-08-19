@@ -23,6 +23,23 @@ export {
   type AnthropicProviderOptions,
 } from './providers/anthropic.js';
 export { ScriptedProvider, type ScriptedTurn } from './providers/scripted.js';
+export {
+  OpenAICompatibleProvider,
+  toChatMessages,
+  type OpenAICompatibleProviderOptions,
+} from './providers/openai-compatible.js';
+export {
+  AI_PROVIDERS,
+  DEFAULT_OLLAMA_BASE_URL,
+  DEFAULT_OLLAMA_MODEL,
+  DEFAULT_OPENAI_BASE_URL,
+  DEFAULT_OPENAI_MODEL,
+  ProviderConfigurationError,
+  createModelProvider,
+  isAiProviderName,
+  type AiProviderName,
+  type ModelProviderConfig,
+} from './providers/factory.js';
 
 export {
   ToolRegistry,
@@ -55,6 +72,39 @@ export {
   type ProposedAction,
   type RunCommandOptions,
 } from './command/loop.js';
+
+export { plan } from './planner/plan.js';
+export {
+  availableWindows,
+  overlappingBlocks,
+  workingWindows,
+  type AvailableWindow,
+} from './planner/availability.js';
+export type {
+  ConflictKind,
+  PlanReason,
+  PlannerBlock,
+  PlannerPreferences,
+  PlannerPriority,
+  PlannerTask,
+  PlanningConflict,
+  PlanningRequest,
+  PlanningResult,
+  PlanningWarning,
+  PreferredWindow,
+  ProposedBlock,
+  UnscheduledItem,
+  WarningKind,
+} from './planner/types.js';
+
+export {
+  isValidTimeZone,
+  localDateKey,
+  localMidnight,
+  localTimeOnDay,
+  localTimeOnDayMinutes,
+  localWeekday,
+} from './time.js';
 
 export {
   findFreeSlots,
