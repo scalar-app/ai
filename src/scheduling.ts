@@ -1,3 +1,5 @@
+import { DAY_MS, MINUTE_MS, localTimeOnDay } from './time.js';
+
 /**
  * Deterministic calendar arithmetic. The model asks for free time; this computes it.
  *
@@ -30,54 +32,6 @@ export interface FreeSlot {
   startsAt: Date;
   endsAt: Date;
   minutes: number;
-}
-
-const MINUTE_MS = 60_000;
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function offsetMs(instant: Date, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    hourCycle: 'h23',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  }).formatToParts(instant);
-  const read = (type: string): number => Number(parts.find((p) => p.type === type)?.value ?? '0');
-  const asUtc = Date.UTC(
-    read('year'),
-    read('month') - 1,
-    read('day'),
-    read('hour'),
-    read('minute'),
-    read('second'),
-  );
-  return asUtc - Math.floor(instant.getTime() / 1000) * 1000;
-}
-
-/** Instant of a local wall clock time on the calendar day containing `instant`. */
-function localTimeOnDay(instant: Date, hour: number, timeZone: string): Date {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    hourCycle: 'h23',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(instant);
-  const read = (type: string): number => Number(parts.find((p) => p.type === type)?.value ?? '0');
-  const year = read('year');
-  const month = read('month');
-  const day = read('day');
-  let guess = Date.UTC(year, month - 1, day, hour, 0, 0);
-  for (let i = 0; i < 3; i += 1) {
-    const next = Date.UTC(year, month - 1, day, hour, 0, 0) - offsetMs(new Date(guess), timeZone);
-    if (next === guess) break;
-    guess = next;
-  }
-  return new Date(guess);
 }
 
 function mergeBusy(intervals: BusyInterval[]): BusyInterval[] {
