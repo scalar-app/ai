@@ -8,25 +8,33 @@
 
 `@scalar/ai` turns a sentence like "what do I have due this week, and can you block two hours for the problem set" into an answer plus a set of changes the person can approve. It is a plain TypeScript package: no database, no HTTP server, no framework. The API supplies the tools and owns authorization, so this package can be read, tested and reasoned about on its own.
 
-## Install
-
-```bash
-pnpm add @scalar/ai
-```
+## Install and build
 
 Requires Node 24 or newer.
+
+```bash
+pnpm install
+pnpm build
+```
+
+Not on npm yet; consumers link it: `"@scalar/ai": "link:../ai"`.
 
 ## The shape of it
 
 ```
-provider.ts            vendor neutral model interface
-providers/anthropic.ts Anthropic implementation (Claude Opus 5, adaptive thinking)
-providers/scripted.ts  replays a fixed script, for tests and for running with AI disabled
-tools/registry.ts      tool definitions and the read/suggest/write classification
-tools/scalar-tools.ts  the eight Stage 1 tools
-prompt.ts              system prompt and external content wrapping
-command/loop.ts        one Command turn
-scheduling.ts          free time arithmetic, computed rather than generated
+provider.ts                     vendor neutral model interface
+providers/anthropic.ts          Anthropic implementation (Claude Opus 5, adaptive thinking)
+providers/openai-compatible.ts  OpenAI, Ollama and anything speaking the same API
+providers/factory.ts            picks a provider from configuration
+providers/scripted.ts           replays a fixed script, for tests and for running with AI disabled
+tools/registry.ts               tool definitions and the read/suggest/write classification
+tools/scalar-tools.ts           the eight Stage 1 tools
+prompt.ts                       system prompt and external content wrapping
+command/loop.ts                 one Command turn
+scheduling.ts                   free time arithmetic, computed rather than generated
+planner/plan.ts                 builds a proposed plan from tasks and availability
+planner/availability.ts         open time once events and working hours are applied
+time.ts                         time zone and calendar day arithmetic
 ```
 
 ## Running a Command turn
@@ -95,7 +103,7 @@ const slots = findFreeSlots({
 
 The Anthropic provider defaults to `claude-opus-5` with adaptive thinking. Depth is steered with `effort` rather than sampling parameters, which current models reject. No assistant prefill is used. `stop_reason` is checked before any content is read.
 
-Swapping providers means implementing `ScalarModelProvider`. Nothing above that interface knows which vendor is answering.
+Anthropic, OpenAI, Ollama and anything speaking the OpenAI API ship already; `providers/factory.ts` picks between them from configuration. Anything else means implementing `ScalarModelProvider`. Nothing above that interface knows which vendor is answering.
 
 ## Development
 
@@ -109,4 +117,4 @@ Tests run against `ScriptedProvider`, so the suite is deterministic and needs no
 
 ## Licence
 
-Apache 2.0. See [LICENSE](LICENSE).
+AGPL-3.0-only. See [LICENSE](./LICENSE).
